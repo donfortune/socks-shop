@@ -36,14 +36,17 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
+        working-directory: ./Terraform
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./Terraform
         id: plan
         run: terraform plan
 
       # tf apply and deploy to EKS
       - name: Terraform apply
+        working-directory: ./Terraform
         id: apply
         run: terraform apply --auto-approve
 
