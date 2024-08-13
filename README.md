@@ -208,6 +208,26 @@ This below command allow us to configure the kubectl to connect to the EKS clust
   ## **Monitoring:**
 
 1. Using Helm and Prometheus to Enable MOnitoring into the cluster
+      helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      helm repo update
+
+      helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
+
+      <img src="images/monitor-resource.png">
+
+      kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+
+      <img src="images/prometheus-1.png">
+
+      <img src="images/prometheus-2.png">
+
+      kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+
+      <img src="images/grafana-1.png">
+
+      <img src="images/grafana-2.png">
+
+      <img src="images/grafana-3.png">
 
 
 ## **Deployment Pipeline:**
@@ -222,81 +242,10 @@ Our workflow file must be in our root directory for our GitHub Actions to detect
 
 The deployment pipeline will be configured to run automatically whenever changes are pushed to the main branch of the repository, ensuring that the Socks Shop application is always up to date and running the latest version.
 
-## **Monitoring**
-
-Prometheus will be used to monitor the performance and health of the Socks Shop application. This will include metrics such as request latency, error rate, and request volume. The Prometheus server will be configured to scrape metrics from the Socks Shop application and store them in a time-series database. Grafana will be used to visualize the metrics and create dashboards to monitor the performance and health of the application.
-
-First create the monitoring namespace using the `00-monitoring-ns.yaml` file:
-
-    kubectl create -f 00-monitoring-ns.yaml
-
-- **Prometheus**
-
-To deploy simply apply all the prometheus manifests (01-10) in any order:
-
-    kubectl apply $(ls *-prometheus-*.yaml | awk ' { print " -f " $1 } ')
-
-The prometheus server will be exposed on Nodeport `31090` using the following command:
-
-    kubectl port-forward service/prometheus 31090:9090 -n monitoring
-
-<img src="Images/prometheus.png">
-
-- **Grafana**
-
-First apply the grafana manifests from 20 to 22:
-
-    kubectl apply $(ls *-grafana-*.yaml | awk ' { print " -f " $1 }'  | grep -v grafana-import)
-
-Once the grafana pod is in the Running state apply the `23-grafana-import-dash-batch.yaml` manifest to import the Dashboards:
-
-    kubectl apply -f 23-grafana-import-dash-batch.yaml
-
-Grafana will be exposed on the NodePort `31300` using the following command:
-
-    kubectl port-forward service/grafana 31300:3000 -n monitoring
-
-- Below is the screenshot:👇🏽
-  <img src="Images/grafana-sockshop.png">
-
-    <img src="Images/prometheus-pod-resources.png">
-
-## **Logging:**
-
-We will use the ELK stack to collect and analyze logs from the Socks Shop application. The ELK stack is a collection of three open-source products — Elasticsearch, Logstash, and Kibana — all developed, managed, and maintained by Elastic. The ELK Stack is used to collect, search, analyze, and visualize log data in real time.
-
-- Below is the screenshot showing the deployment of logging to our cluster:👇🏽
-
-<img src="Images/logging-apply-all.png">
-
-- We verify that our pods are running the freshly deployed logging services.
-  <img src="Images/all-kubesystem.png">
-
-- After the successful deployment of the loggings into our cluster, we use the following command to portfoward the service to we can access it locally;
-
-        kubectl port-forward service/kibana 5601:5601 -n kube-system
-
-<img src="Images/kibanna_logging.png">
-
-## **Security:**
-
-The application will be secured with HTTPS using a Let's Encrypt certificate. Let's Encrypt is a free, automated, and open certificate authority that provides free SSL/TLS certificates for websites. The certificate will be used to secure the communication between the client and the Socks-Shop application, ensuring that the data is encrypted and secure.
-
 ## **Conclusion:**
 
 This project will provide hands-on experience with Infrastructure as Code, Kubernetes, DevOps best practices, and cloud security. It will also demonstrate the value of automation and monitoring in ensuring the reliability and performance of microservices-based applications. By the end of the project, you will have a fully functional deployment pipeline for the Socks Shop application, including infrastructure provisioning, monitoring, logging, and security.
 
-#
 
-## **References:**
 
-- [Terraform Documentation](https://www.terraform.io/docs/index.html)
-- [AWS Documentation](https://docs.aws.amazon.com/index.html)
-- [Kubernetes Documentation](https://kubernetes.io/docs/home/)
-- [Prometheus Documentation](https://prometheus.io/docs/)
-- [ELK Stack Documentation](https://www.elastic.co/guide/index.html)
-- [Ansible Documentation](https://docs.ansible.com/ansible/latest/index.html)
-- [Let's Encrypt Documentation](https://letsencrypt.org/docs/)
-- [Docker Documentation](https://docs.docker.com/)
-- [Socks Shop Application](https://github.com/microservices-demo/microservices-demo.github.io)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+
