@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: #my domain
+    - host: www.tambu.tech
       http:
         paths:
           - pathType: Prefix
