@@ -2,6 +2,8 @@
 
 **PROJECT LIVE LINK:** [CAPSTONE PROJECT LINK](http://tambu.tech)
 
+<img src="images/archdiag.PNG">
+
 ##
 
 ## **Project Overview:**
@@ -147,7 +149,7 @@ This below command allow us to configure the kubectl to connect to the EKS clust
 - We apply our deployment manifests to our cluster using the following command:
 
         kubectl apply -f k8s/deployment.yaml
-
+    
     <img src="images/k8s-resources-1.png">
     
     <img src="images/k8s-resources-2.png">
